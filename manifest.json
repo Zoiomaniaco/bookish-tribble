@@ -1,7 +1,7 @@
 {
   "name": "Nosso Tempo, Nossa História",
   "short_name": "Nosso Tempo",
-  "start_url": "/",
+  "start_url": "/bookish-tribble/",
   "display": "standalone",
   "background_color": "#050505",
   "theme_color": "#050505",
