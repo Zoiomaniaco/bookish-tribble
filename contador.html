@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nosso Tempo, Nossa História ❤️</title>
+  
+  <!-- Fontes (Outfit para Números, Poppins para Texto) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;800&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body, html {
+      width: 100%;
+      height: 100%;
+      font-family: 'Poppins', sans-serif;
+      background-color: #050505;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    
+    /* Container Principal */
+    .card-wrapper {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      max-width: 520px;
+      max-height: 95vh;
+      background: url('277253.png') no-repeat center center;
+      background-size: contain;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    /* Conteúdo Principal (Contador + Botões) */
+    .conteudo-integrado {
+      position: absolute;
+      bottom: 6%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 92%;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      z-index: 10;
+    }
+
+    /* Painel do Contador */
+    .contador-overlay {
+      width: 100%;
+      background: rgba(12, 12, 14, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 20px;
+      padding: 16px 8px;
+      border: 1px solid rgba(255, 215, 0, 0.35);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.85), inset 0 0 15px rgba(255, 215, 0, 0.12);
+      text-align: center;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      cursor: pointer;
+    }
+
+    .contador-overlay:active {
+      transform: scale(0.98);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.9), inset 0 0 25px rgba(255, 215, 0, 0.2);
+    }
+
+    .contador-grid {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    /* Bloco do Anel Circular */
+    .bloco-ring {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      width: 54px;
+    }
+
+    .svg-ring {
+      width: 54px;
+      height: 54px;
+      transform: rotate(-90deg);
+    }
+
+    .ring-bg {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.08);
+      stroke-width: 3.5;
+    }
+
+    .ring-progress {
+      fill: none;
+      stroke: url(#gold-gradient);
+      stroke-width: 3.5;
+      stroke-linecap: round;
+      stroke-dasharray: 138;
+      stroke-dashoffset: 138;
+      transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      filter: drop-shadow(0 0 3px rgba(255, 215, 0, 0.6));
+    }
+
+    /* Números Fixos Centralizados */
+    .numero-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 54px;
+      height: 54px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .numero {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #ffffff;
+      text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .rotulo {
+      font-size: 0.58rem;
+      text-transform: uppercase;
+      color: #ffd700;
+      letter-spacing: 0.8px;
+      margin-top: 6px;
+      font-weight: 700;
+      opacity: 0.9;
+    }
+
+    /* Separadores Piscantes `:` */
+    .separador {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: rgba(255, 215, 0, 0.7);
+      animation: piscar 1.5s infinite;
+      margin-bottom: 14px;
+    }
+
+    @keyframes piscar {
+      0%, 100% { opacity: 1; text-shadow: 0 0 6px rgba(255, 215, 0, 0.8); }
+      50% { opacity: 0.2; text-shadow: none; }
+    }
+
+    /* Botões */
+    .area-botoes {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .btn-acao {
+      flex: 1;
+      padding: 10px 4px;
+      background: linear-gradient(135deg, #ffd700, #b8860b);
+      color: #000;
+      font-weight: 800;
+      font-size: clamp(0.58rem, 1.9vw, 0.68rem);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .btn-acao:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(255, 215, 0, 0.5);
+    }
+
+    /* TELA DE HISTÓRIA */
+    .tela-historia {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(10, 10, 10, 0.96);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 50;
+      flex-direction: column;
+      padding: 20px 15px;
+      overflow-y: auto;
+    }
+
+    .tela-historia.ativa {
+      display: flex;
+    }
+
+    .topo-historia {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+    }
+
+    .titulo-historia {
+      color: #ffd700;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .btn-voltar {
+      background: rgba(255, 215, 0, 0.15);
+      color: #ffd700;
+      border: 1px solid #ffd700;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-voltar:hover {
+      background: #ffd700;
+      color: #000;
+    }
+
+    .grid-historia {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      padding-bottom: 20px;
+    }
+
+    .card-foto-historia {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .card-foto-historia:hover {
+      transform: translateY(-3px) scale(1.03);
+      border-color: #ffd700;
+      box-shadow: 0 6px 18px rgba(255, 215, 0, 0.3);
+    }
+
+    .card-foto-historia img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* MODAL DE AMPLIAÇÃO DA FOTO */
+    .modal-zoom {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 200;
+      justify-content: center;
+      align-items: center;
+      padding: 15px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-zoom.ativo {
+      display: flex;
+      opacity: 1;
+    }
+
+    .modal-zoom img {
+      max-width: 95vw;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 215, 0, 0.5);
+      box-shadow: 0 0 35px rgba(255, 215, 0, 0.3);
+    }
+
+    .fechar-zoom {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      color: #fff;
+      font-size: 2.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 201;
+      line-height: 1;
+      transition: color 0.2s;
+    }
+
+    .fechar-zoom:hover {
+      color: #ffd700;
+    }
+
+    /* Modais Padrão para Galeria e Música */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.92);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .modal.ativo {
+      display: flex;
+    }
+
+    .modal-container {
+      position: relative;
+      max-width: 90%;
+      max-height: 80vh;
+      background: #111;
+      padding: 12px;
+      border-radius: 18px;
+      border: 2px solid #ffd700;
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
+      text-align: center;
+    }
+
+    .modal-container img {
+      max-width: 100%;
+      max-height: 60vh;
+      border-radius: 12px;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .modal-legenda {
+      color: #ffd700;
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-top: 12px;
+    }
+
+    /* Player de Áudio Estilizado */
+    audio {
+      width: 100%;
+      margin-top: 15px;
+      border-radius: 30px;
+      outline: none;
+    }
+
+    .fechar-modal {
+      position: absolute;
+      top: 20px;
+      right: 25px;
+      color: #ffffff;
+      font-size: 2.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 101;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Definição SVG do Gradiente Dourado -->
+  <svg style="width:0;height:0;position:absolute;" aria-hidden="true">
+    <defs>
+      <linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#ffe875" />
+        <stop offset="50%" stop-color="#ffd700" />
+        <stop offset="100%" stop-color="#996515" />
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <div class="card-wrapper">
+    <!-- Bloco Unificado: Contador App + Botões -->
+    <div class="conteudo-integrado">
+      <div class="contador-overlay" onclick="vibrarToque()">
+        <div class="contador-grid">
+          
+          <!-- Anos -->
+          <div class="bloco-ring">
+            <svg class="svg-ring" viewBox="0 0 50 50">
+              <circle class="ring-bg" cx="25" cy="25" r="22" />
+              <circle class="ring-progress" id="ring-anos" cx="25" cy="25" r="22" />
+            </svg>
+            <div class="numero-container"><div class="numero" id="anos">0</div></div>
+            <div class="rotulo">Anos</div>
+          </div>
+
+          <div class="separador">:</div>
+
+          <!-- Meses -->
+          <div class="bloco-ring">
+            <svg class="svg-ring" viewBox="0 0 50 50">
+              <circle class="ring-bg" cx="25" cy="25" r="22" />
+              <circle class="ring-progress" id="ring-meses" cx="25" cy="25" r="22" />
+            </svg>
+            <div class="numero-container"><div class="numero" id="meses">0</div></div>
+            <div class="rotulo">Meses</div>
+          </div>
+
+          <div class="separador">:</div>
+
+          <!-- Dias -->
+          <div class="bloco-ring">
+            <svg class="svg-ring" viewBox="0 0 50 50">
+              <circle class="ring-bg" cx="25" cy="25" r="22" />
+              <circle class="ring-progress" id="ring-dias" cx="25" cy="25" r="22" />
+            </svg>
+            <div class="numero-container"><div class="numero" id="dias">0</div></div>
+            <div class="rotulo">Dias</div>
+          </div>
+
+          <div class="separador">:</div>
+
+          <!-- Horas -->
+          <div class="bloco-ring">
+            <svg class="svg-ring" viewBox="0 0 50 50">
+              <circle class="ring-bg" cx="25" cy="25" r="22" />
+              <circle class="ring-progress" id="ring-horas" cx="25" cy="25" r="22" />
+            </svg>
+            <div class="numero-container"><div class="numero" id="horas">00</div></div>
+            <div class="rotulo">Horas</div>
+          </div>
+
+          <div class="separador">:</div>
+
+          <!-- Minutos -->
+          <div class="bloco-ring">
+            <svg class="svg-ring" viewBox="0 0 50 50">
+              <circle class="ring-bg" cx="25" cy="25" r="22" />
+              <circle class="ring-progress" id="ring-minutos" cx="25" cy="25" r="22" />
+            </svg>
+            <div class="numero-container"><div class="numero" id="minutos">00</div></div>
+            <div class="rotulo">Min</div>
+          </div>
+
+          <div class="separador">:</div>
+
+          <!-- Segundos -->
+          <div class="bloco-ring">
+            <svg class="svg-ring" viewBox="0 0 50 50">
+              <circle class="ring-bg" cx="25" cy="25" r="22" />
+              <circle class="ring-progress" id="ring-segundos" cx="25" cy="25" r="22" />
+            </svg>
+            <div class="numero-container"><div class="numero" id="segundos">00</div></div>
+            <div class="rotulo">Seg</div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="area-botoes">
+        <button class="btn-acao" onclick="abrirHistoria()">Nossa História</button>
+        <button class="btn-acao" onclick="abrirModal('modalFotos')">Galeria</button>
+        <button class="btn-acao" onclick="abrirModal('modalMusica')">Nossa Música</button>
+      </div>
+    </div>
+
+    <!-- TELA NOSSA HISTÓRIA -->
+    <div class="tela-historia" id="telaHistoria">
+      <div class="topo-historia">
+        <div class="titulo-historia">Nossa História ❤️</div>
+        <button class="btn-voltar" onclick="fecharHistoria()">← Voltar</button>
+      </div>
+
+      <div class="grid-historia">
+        <div class="card-foto-historia" onclick="ampliarFoto('277404.png')">
+          <img src="277404.png" alt="E foi aí que eu me apaixonei por você">
+        </div>
+        <div class="card-foto-historia" onclick="ampliarFoto('277420.png')">
+          <img src="277420.png" alt="Acabei me apaixonando pela minha linda passageira">
+        </div>
+        <div class="card-foto-historia" onclick="ampliarFoto('277423.png')">
+          <img src="277423.png" alt="Nosso primeiro Pedal">
+        </div>
+        <div class="card-foto-historia" onclick="ampliarFoto('277448.png')">
+          <img src="277448.png" alt="Você conseguiu, você é guerreira">
+        </div>
+        <div class="card-foto-historia" onclick="ampliarFoto('277444.jpg')">
+          <img src="277444.jpg" alt="Lanches e momentos especiais">
+        </div>
+        <div class="card-foto-historia" onclick="ampliarFoto('277499.png')">
+          <img src="277499.png" alt="No meu melhor momento você estava ao meu lado">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL ZOOM DA FOTO -->
+  <div class="modal-zoom" id="modalZoom" onclick="fecharZoom()">
+    <span class="fechar-zoom" onclick="fecharZoom()">&times;</span>
+    <img id="imgZoom" src="" alt="Foto Ampliada" onclick="event.stopPropagation()">
+  </div>
+
+  <!-- Modal Galeria -->
+  <div class="modal" id="modalFotos">
+    <span class="fechar-modal" onclick="fecharModal('modalFotos')">&times;</span>
+    <div class="modal-container">
+      <img src="foto2.jpg" alt="Galeria">
+      <div class="modal-legenda">Nossos Melhores Momentos ✨</div>
+    </div>
+  </div>
+
+  <!-- Modal Música COM O REPRODUTOR DE ÁUDIO -->
+  <div class="modal" id="modalMusica">
+    <span class="fechar-modal" onclick="fecharModal('modalMusica')">&times;</span>
+    <div class="modal-container">
+      <img src="277499.png" alt="Nossa Música">
+      <div class="modal-legenda">A Trilha Sonora do Nosso Amor 🎵</div>
+      <!-- Reprodutor de Áudio -->
+      <audio controls loop>
+        <source src="nossa-musica.mp3" type="audio/mpeg">
+        Seu navegador não suporta o áudio.
+      </audio>
+    </div>
+  </div>
+
+  <script>
+    const dataInicio = new Date(2025, 2, 25, 0, 0, 0);
+    const CIRCUNFERENCIA = 138;
+
+    function padZero(num) {
+      return num < 10 ? '0' + num : '' + num;
+    }
+
+    function atualizarRing(idRing, valorAtual, valorMaximo) {
+      const ring = document.getElementById(idRing);
+      const porcentagem = Math.min(valorAtual / valorMaximo, 1);
+      const offset = CIRCUNFERENCIA - (porcentagem * CIRCUNFERENCIA);
+      ring.style.strokeDashoffset = offset;
+    }
+
+    function atualizarContador() {
+      const agora = new Date();
+      if (agora < dataInicio) return;
+
+      let anos = agora.getFullYear() - dataInicio.getFullYear();
+      let meses = agora.getMonth() - dataInicio.getMonth();
+      let dias = agora.getDate() - dataInicio.getDate();
+      let horas = agora.getHours() - dataInicio.getHours();
+      let minutos = agora.getMinutes() - dataInicio.getMinutes();
+      let segundos = agora.getSeconds() - dataInicio.getSeconds();
+
+      if (segundos < 0) { segundos += 60; minutos--; }
+      if (minutos < 0) { minutos += 60; horas--; }
+      if (horas < 0) { horas += 24; dias--; }
+      if (dias < 0) {
+        const ultimoDiaMesAnterior = new Date(agora.getFullYear(), agora.getMonth(), 0).getDate();
+        dias += ultimoDiaMesAnterior;
+        meses--;
+      }
+      if (meses < 0) { meses += 12; anos--; }
+
+      // Atualiza valores diretamente nos elementos
+      document.getElementById('anos').innerText = anos;
+      document.getElementById('meses').innerText = meses;
+      document.getElementById('dias').innerText = dias;
+      document.getElementById('horas').innerText = padZero(horas);
+      document.getElementById('minutos').innerText = padZero(minutos);
+      document.getElementById('segundos').innerText = padZero(segundos);
+
+      // Atualiza o progresso visual dos anéis
+      atualizarRing('ring-anos', anos % 5, 5);
+      atualizarRing('ring-meses', meses, 12);
+      atualizarRing('ring-dias', dias, 31);
+      atualizarRing('ring-horas', horas, 24);
+      atualizarRing('ring-minutos', minutos, 60);
+      atualizarRing('ring-segundos', segundos, 60);
+    }
+
+    function vibrarToque() {
+      if ('vibrate' in navigator) {
+        navigator.vibrate(15);
+      }
+    }
+
+    setInterval(atualizarContador, 1000);
+    atualizarContador();
+
+    /* Funções das Telas e Modais */
+    function abrirHistoria() {
+      document.getElementById('telaHistoria').classList.add('ativa');
+    }
+
+    function fecharHistoria() {
+      document.getElementById('telaHistoria').classList.remove('ativa');
+    }
+
+    function ampliarFoto(src) {
+      document.getElementById('imgZoom').src = src;
+      document.getElementById('modalZoom').classList.add('ativo');
+    }
+
+    function fecharZoom() {
+      document.getElementById('modalZoom').classList.remove('ativo');
+    }
+
+    function abrirModal(id) {
+      document.getElementById(id).classList.add('ativo');
+    }
+
+    function fecharModal(id) {
+      document.getElementById(id).classList.remove('ativo');
+    }
+  </script>
+
+</body>
+</html>
