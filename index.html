@@ -3,644 +3,376 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nosso Tempo, Nossa História ❤️</title>
-  
-  <!-- Configuração para PWA (Instalação como App) -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#050505">
-
-  <!-- Fontes (Outfit para Números, Poppins para Texto) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;800&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
-
+  <title>Diário de Bordo 🍁</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    :root {
+      --primary: #1a365d;
+      --secondary: #2b6cb0;
+      --bg: #f7fafc;
+      --card-bg: #ffffff;
+      --text: #2d3748;
+      --success: #38a169;
     }
-    body, html {
-      width: 100%;
-      height: 100%;
-      font-family: 'Poppins', sans-serif;
-      background-color: #050505;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding: 15px; }
+    .container { max-width: 600px; margin: 0 auto; background: var(--card-bg); padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    h1, h2 { color: var(--primary); margin-bottom: 15px; text-align: center; }
     
-    /* Container Principal */
-    .card-wrapper {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      max-width: 520px;
-      max-height: 95vh;
-      background: url('277253.png') no-repeat center center;
-      background-size: contain;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-    }
+    .hidden { display: none !important; }
+    
+    .form-group { margin-bottom: 12px; }
+    label { display: block; margin-bottom: 4px; font-weight: bold; }
+    input, select, button { width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 4px; font-size: 14px; }
+    button { background-color: var(--primary); color: white; font-weight: bold; cursor: pointer; border: none; margin-top: 10px; }
+    button:hover { background-color: var(--secondary); }
+    button.secondary { background-color: #718096; }
 
-    /* Conteúdo Principal (Contador + Botões) */
-    .conteudo-integrado {
-      position: absolute;
-      bottom: 6%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 92%;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      z-index: 10;
-    }
+    /* Estilo do Seletor EMPRESA vs FUNCIONÁRIO */
+    .profile-card { border: 2px solid #cbd5e0; border-radius: 6px; padding: 10px; text-align: center; cursor: pointer; width: 50%; }
+    .profile-card.active { border-color: var(--primary); background-color: #ebf8ff; font-weight: bold; }
 
-    /* Painel do Contador */
-    .contador-overlay {
-      width: 100%;
-      background: rgba(12, 12, 14, 0.88);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-radius: 20px;
-      padding: 16px 8px;
-      border: 1px solid rgba(255, 215, 0, 0.35);
-      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.85), inset 0 0 15px rgba(255, 215, 0, 0.12);
-      text-align: center;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-      cursor: pointer;
-    }
+    .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+    .menu-btn { padding: 20px; background-color: var(--secondary); font-size: 16px; text-align: center; }
 
-    .contador-overlay:active {
-      transform: scale(0.98);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.9), inset 0 0 25px rgba(255, 215, 0, 0.2);
-    }
-
-    .contador-grid {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-    }
-
-    /* Bloco do Anel Circular */
-    .bloco-ring {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: relative;
-      width: 54px;
-    }
-
-    .svg-ring {
-      width: 54px;
-      height: 54px;
-      transform: rotate(-90deg);
-    }
-
-    .ring-bg {
-      fill: none;
-      stroke: rgba(255, 255, 255, 0.08);
-      stroke-width: 3.5;
-    }
-
-    .ring-progress {
-      fill: none;
-      stroke: url(#gold-gradient);
-      stroke-width: 3.5;
-      stroke-linecap: round;
-      stroke-dasharray: 138;
-      stroke-dashoffset: 138;
-      transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-      filter: drop-shadow(0 0 3px rgba(255, 215, 0, 0.6));
-    }
-
-    /* Números Fixos Centralizados */
-    .numero-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 54px;
-      height: 54px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .numero {
-      font-family: 'Outfit', sans-serif;
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: #ffffff;
-      text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
-      font-variant-numeric: tabular-nums;
-    }
-
-    .rotulo {
-      font-size: 0.58rem;
-      text-transform: uppercase;
-      color: #ffd700;
-      letter-spacing: 0.8px;
-      margin-top: 6px;
-      font-weight: 700;
-      opacity: 0.9;
-    }
-
-    /* Separadores Piscantes `:` */
-    .separador {
-      font-family: 'Outfit', sans-serif;
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: rgba(255, 215, 0, 0.7);
-      animation: piscar 1.5s infinite;
-      margin-bottom: 14px;
-    }
-
-    @keyframes piscar {
-      0%, 100% { opacity: 1; text-shadow: 0 0 6px rgba(255, 215, 0, 0.8); }
-      50% { opacity: 0.2; text-shadow: none; }
-    }
-
-    /* Botões */
-    .area-botoes {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      width: 100%;
-    }
-
-    .btn-acao {
-      flex: 1;
-      padding: 10px 4px;
-      background: linear-gradient(135deg, #ffd700, #b8860b);
-      color: #000;
-      font-weight: 800;
-      font-size: clamp(0.58rem, 1.9vw, 0.68rem);
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
-      transition: transform 0.2s, box-shadow 0.2s;
-      white-space: nowrap;
-      text-align: center;
-    }
-
-    .btn-acao:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(255, 215, 0, 0.5);
-    }
-
-    /* TELA DE HISTÓRIA */
-    .tela-historia {
-      display: none;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(10, 10, 10, 0.96);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      z-index: 50;
-      flex-direction: column;
-      padding: 20px 15px;
-      overflow-y: auto;
-    }
-
-    .tela-historia.ativa {
-      display: flex;
-    }
-
-    .topo-historia {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid rgba(255, 215, 0, 0.3);
-    }
-
-    .titulo-historia {
-      color: #ffd700;
-      font-size: 1.2rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-    }
-
-    .btn-voltar {
-      background: rgba(255, 215, 0, 0.15);
-      color: #ffd700;
-      border: 1px solid #ffd700;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-weight: 700;
-      font-size: 0.8rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .btn-voltar:hover {
-      background: #ffd700;
-      color: #000;
-    }
-
-    .grid-historia {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      padding-bottom: 20px;
-    }
-
-    .card-foto-historia {
-      position: relative;
-      aspect-ratio: 1 / 1;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid rgba(255, 215, 0, 0.3);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .card-foto-historia:hover {
-      transform: translateY(-3px) scale(1.03);
-      border-color: #ffd700;
-      box-shadow: 0 6px 18px rgba(255, 215, 0, 0.3);
-    }
-
-    .card-foto-historia img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    /* MODAL DE AMPLIAÇÃO DA FOTO */
-    .modal-zoom {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.95);
-      z-index: 200;
-      justify-content: center;
-      align-items: center;
-      padding: 15px;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .modal-zoom.ativo {
-      display: flex;
-      opacity: 1;
-    }
-
-    .modal-zoom img {
-      max-width: 95vw;
-      max-height: 90vh;
-      object-fit: contain;
-      border-radius: 10px;
-      border: 1px solid rgba(255, 215, 0, 0.5);
-      box-shadow: 0 0 35px rgba(255, 215, 0, 0.3);
-    }
-
-    .fechar-zoom {
-      position: absolute;
-      top: 15px;
-      right: 20px;
-      color: #fff;
-      font-size: 2.5rem;
-      font-weight: bold;
-      cursor: pointer;
-      z-index: 201;
-      line-height: 1;
-      transition: color 0.2s;
-    }
-
-    .fechar-zoom:hover {
-      color: #ffd700;
-    }
-
-    /* Modais Padrão para Galeria e Música */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.92);
-      z-index: 100;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      padding: 20px;
-    }
-
-    .modal.ativo {
-      display: flex;
-    }
-
-    .modal-container {
-      position: relative;
-      max-width: 90%;
-      max-height: 80vh;
-      background: #111;
-      padding: 12px;
-      border-radius: 18px;
-      border: 2px solid #ffd700;
-      box-shadow: 0 0 25px rgba(255, 215, 0, 0.4);
-      text-align: center;
-    }
-
-    .modal-container img {
-      max-width: 100%;
-      max-height: 60vh;
-      border-radius: 12px;
-      object-fit: contain;
-      display: block;
-      margin: 0 auto;
-    }
-
-    .modal-legenda {
-      color: #ffd700;
-      font-size: 1.05rem;
-      font-weight: 600;
-      margin-top: 12px;
-    }
-
-    /* Player de Áudio Estilizado */
-    audio {
-      width: 100%;
-      margin-top: 15px;
-      border-radius: 30px;
-      outline: none;
-    }
-
-    .fechar-modal {
-      position: absolute;
-      top: 20px;
-      right: 25px;
-      color: #ffffff;
-      font-size: 2.2rem;
-      font-weight: bold;
-      cursor: pointer;
-      z-index: 101;
-    }
+    .card { background: #edf2f7; padding: 12px; border-radius: 6px; margin-bottom: 10px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #cbd5e0; padding: 8px; text-align: left; font-size: 13px; }
+    th { background-color: #e2e8f0; }
   </style>
 </head>
 <body>
 
-  <!-- Definição SVG do Gradiente Dourado -->
-  <svg style="width:0;height:0;position:absolute;" aria-hidden="true">
-    <defs>
-      <linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stop-color="#ffe875" />
-        <stop offset="50%" stop-color="#ffd700" />
-        <stop offset="100%" stop-color="#996515" />
-      </linearGradient>
-    </defs>
-  </svg>
+<div class="container">
 
-  <div class="card-wrapper">
-    <!-- Bloco Unificado: Contador App + Botões -->
-    <div class="conteudo-integrado">
-      <div class="contador-overlay" onclick="vibrarToque()">
-        <div class="contador-grid">
-          
-          <!-- Anos -->
-          <div class="bloco-ring">
-            <svg class="svg-ring" viewBox="0 0 50 50">
-              <circle class="ring-bg" cx="25" cy="25" r="22" />
-              <circle class="ring-progress" id="ring-anos" cx="25" cy="25" r="22" />
-            </svg>
-            <div class="numero-container"><div class="numero" id="anos">0</div></div>
-            <div class="rotulo">Anos</div>
-          </div>
+  <!-- TELA DE LOGIN -->
+  <div id="screen-login">
+    <h1>Diário de Bordo 🍁</h1>
+    <h2>Login</h2>
 
-          <div class="separador">:</div>
-
-          <!-- Meses -->
-          <div class="bloco-ring">
-            <svg class="svg-ring" viewBox="0 0 50 50">
-              <circle class="ring-bg" cx="25" cy="25" r="22" />
-              <circle class="ring-progress" id="ring-meses" cx="25" cy="25" r="22" />
-            </svg>
-            <div class="numero-container"><div class="numero" id="meses">0</div></div>
-            <div class="rotulo">Meses</div>
-          </div>
-
-          <div class="separador">:</div>
-
-          <!-- Dias -->
-          <div class="bloco-ring">
-            <svg class="svg-ring" viewBox="0 0 50 50">
-              <circle class="ring-bg" cx="25" cy="25" r="22" />
-              <circle class="ring-progress" id="ring-dias" cx="25" cy="25" r="22" />
-            </svg>
-            <div class="numero-container"><div class="numero" id="dias">0</div></div>
-            <div class="rotulo">Dias</div>
-          </div>
-
-          <div class="separador">:</div>
-
-          <!-- Horas -->
-          <div class="bloco-ring">
-            <svg class="svg-ring" viewBox="0 0 50 50">
-              <circle class="ring-bg" cx="25" cy="25" r="22" />
-              <circle class="ring-progress" id="ring-horas" cx="25" cy="25" r="22" />
-            </svg>
-            <div class="numero-container"><div class="numero" id="horas">00</div></div>
-            <div class="rotulo">Horas</div>
-          </div>
-
-          <div class="separador">:</div>
-
-          <!-- Minutos -->
-          <div class="bloco-ring">
-            <svg class="svg-ring" viewBox="0 0 50 50">
-              <circle class="ring-bg" cx="25" cy="25" r="22" />
-              <circle class="ring-progress" id="ring-minutos" cx="25" cy="25" r="22" />
-            </svg>
-            <div class="numero-container"><div class="numero" id="minutos">00</div></div>
-            <div class="rotulo">Min</div>
-          </div>
-
-          <div class="separador">:</div>
-
-          <!-- Segundos -->
-          <div class="bloco-ring">
-            <svg class="svg-ring" viewBox="0 0 50 50">
-              <circle class="ring-bg" cx="25" cy="25" r="22" />
-              <circle class="ring-progress" id="ring-segundos" cx="25" cy="25" r="22" />
-            </svg>
-            <div class="numero-container"><div class="numero" id="segundos">00</div></div>
-            <div class="rotulo">Seg</div>
-          </div>
-
+    <!-- Opção EMPRESA e FUNCIONÁRIO -->
+    <div class="form-group">
+      <label>Tipo de Acesso</label>
+      <div style="display: flex; gap: 10px;">
+        <div id="btn-type-func" class="profile-card active" onclick="selectUserType('FUNCIONARIO')">
+          👤 FUNCIONÁRIO
         </div>
-      </div>
-
-      <div class="area-botoes">
-        <button class="btn-acao" onclick="abrirHistoria()">Nossa História</button>
-        <button class="btn-acao" onclick="abrirModal('modalFotos')">Galeria</button>
-        <button class="btn-acao" onclick="abrirModal('modalMusica')">Nossa Música</button>
-      </div>
-    </div>
-
-    <!-- TELA NOSSA HISTÓRIA -->
-    <div class="tela-historia" id="telaHistoria">
-      <div class="topo-historia">
-        <div class="titulo-historia">Nossa História ❤️</div>
-        <button class="btn-voltar" onclick="fecharHistoria()">← Voltar</button>
-      </div>
-
-      <div class="grid-historia">
-        <div class="card-foto-historia" onclick="ampliarFoto('277404.png')">
-          <img src="277404.png" alt="E foi aí que eu me apaixonei por você">
-        </div>
-        <div class="card-foto-historia" onclick="ampliarFoto('277420.png')">
-          <img src="277420.png" alt="Acabei me apaixonando pela minha linda passageira">
-        </div>
-        <div class="card-foto-historia" onclick="ampliarFoto('277423.png')">
-          <img src="277423.png" alt="Nosso primeiro Pedal">
-        </div>
-        <div class="card-foto-historia" onclick="ampliarFoto('277448.png')">
-          <img src="277448.png" alt="Você conseguiu, você é guerreira">
-        </div>
-        <div class="card-foto-historia" onclick="ampliarFoto('277444.jpg')">
-          <img src="277444.jpg" alt="Lanches e momentos especiais">
-        </div>
-        <div class="card-foto-historia" onclick="ampliarFoto('277499.png')">
-          <img src="277499.png" alt="No meu melhor momento você estava ao meu lado">
+        <div id="btn-type-emp" class="profile-card" onclick="selectUserType('EMPRESA')">
+          🏢 EMPRESA
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- MODAL ZOOM DA FOTO -->
-  <div class="modal-zoom" id="modalZoom" onclick="fecharZoom()">
-    <span class="fechar-zoom" onclick="fecharZoom()">&times;</span>
-    <img id="imgZoom" src="" alt="Foto Ampliada" onclick="event.stopPropagation()">
-  </div>
-
-  <!-- Modal Galeria -->
-  <div class="modal" id="modalFotos">
-    <span class="fechar-modal" onclick="fecharModal('modalFotos')">&times;</span>
-    <div class="modal-container">
-      <img src="277253.png" alt="Galeria">
-      <div class="modal-legenda">Nossos Melhores Momentos ✨</div>
+    <div class="form-group">
+      <label>E-mail / Usuário</label>
+      <input type="email" id="login-email" placeholder="usuario@empresa.com">
     </div>
-  </div>
-
-  <!-- Modal Música COM O REPRODUTOR DE ÁUDIO -->
-  <div class="modal" id="modalMusica">
-    <span class="fechar-modal" onclick="fecharModal('modalMusica')">&times;</span>
-    <div class="modal-container">
-      <img src="277499.png" alt="Nossa Música">
-      <div class="modal-legenda">A Trilha Sonora do Nosso Amor 🎵</div>
-      <!-- Reprodutor de Áudio -->
-      <audio controls loop>
-        <source src="nossa-musica.mp3" type="audio/mpeg">
-        Seu navegador não suporta o áudio.
-      </audio>
+    <div class="form-group">
+      <label>Senha</label>
+      <input type="password" id="login-pass" placeholder="******">
     </div>
+    <button onclick="login()">Entrar</button>
+    <button class="secondary" onclick="navigate('screen-register')">Inscrever-se</button>
   </div>
 
-  <script>
-    const dataInicio = new Date(2025, 2, 25, 0, 0, 0);
-    const CIRCUNFERENCIA = 138;
+  <!-- TELA DE CADASTRO -->
+  <div id="screen-register" class="hidden">
+    <h2>Criar Conta</h2>
+    
+    <div class="form-group">
+      <label>Tipo de Conta</label>
+      <select id="reg-type">
+        <option value="FUNCIONARIO">FUNCIONÁRIO</option>
+        <option value="EMPRESA">EMPRESA</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Nome Completo / Razão Social</label>
+      <input type="text" id="reg-name" placeholder="Ex: João da Silva ou Logística LTDA">
+    </div>
+    <div class="form-group">
+      <label>E-mail</label>
+      <input type="email" id="reg-email">
+    </div>
+    <div class="form-group">
+      <label>Senha</label>
+      <input type="password" id="reg-pass">
+    </div>
+    <button onclick="registerUser()">Cadastrar e Entrar</button>
+    <button class="secondary" onclick="navigate('screen-login')">Voltar ao Login</button>
+  </div>
 
-    function padZero(num) {
-      return num < 10 ? '0' + num : '' + num;
+  <!-- ÁREA DO FUNCIONÁRIO (DASHBOARD) -->
+  <div id="screen-dashboard" class="hidden">
+    <h2>Área do Funcionário</h2>
+    <p style="text-align: center; margin-bottom: 15px;">Bem-vindo(a), <strong id="user-display">Motorista</strong>!</p>
+    
+    <div class="menu-grid">
+      <button class="menu-btn" onclick="navigate('screen-extrato')">1. Extratos</button>
+      <button class="menu-btn" onclick="navigate('screen-pegar-viagem')">2. Pegar Viagens</button>
+      <button class="menu-btn" onclick="navigate('screen-status')">3. Status da Viagem</button>
+      <button class="menu-btn" onclick="navigate('screen-historico')">4. Histórico</button>
+    </div>
+    <button class="secondary" style="margin-top: 20px;" onclick="navigate('screen-login')">Sair / Logout</button>
+  </div>
+
+  <!-- ÁREA DA EMPRESA (PAINEL ADMINISTRATIVO) -->
+  <div id="screen-company-dashboard" class="hidden">
+    <h2>Painel da Empresa 🏢</h2>
+    <p style="text-align: center; margin-bottom: 15px;">Bem-vindo(a), <strong id="company-display">Empresa</strong>!</p>
+    <div class="card">
+      <h3>Gestão da Frota</h3>
+      <p style="margin-top: 5px; font-size: 14px;">Aqui a empresa poderá visualizar as viagens ativas de todos os funcionários e aprovar despesas.</p>
+    </div>
+    <button class="secondary" style="margin-top: 20px;" onclick="navigate('screen-login')">Sair / Logout</button>
+  </div>
+
+  <!-- 1. EXTRATOS -->
+  <div id="screen-extrato" class="hidden">
+    <h2>Extratos</h2>
+    
+    <!-- Nome do Funcionário no início do Extrato -->
+    <div class="card" style="background-color: #e2e8f0; border-left: 4px solid var(--primary);">
+      <strong>Funcionário:</strong> <span id="ext-nome-funcionario">João da Silva</span>
+    </div>
+
+    <!-- Salário / Ganhos Zerados Inicialmente -->
+    <div class="card"><strong>Saldo de Ganhos:</strong> R$ <span id="ext-salario">0,00</span></div>
+    <div class="card"><strong>Quantidade de Viagens:</strong> <span id="ext-viagens">0</span></div>
+    <div class="card"><strong>Multas Registradas:</strong> R$ <span id="ext-multas">0,00</span></div>
+    <div class="card"><strong>Total de KM Rodado:</strong> <span id="ext-km">0</span> km</div>
+    <button class="secondary" onclick="navigate('screen-dashboard')">Voltar</button>
+  </div>
+
+  <!-- 2. PEGAR VIAGENS -->
+  <div id="screen-pegar-viagem" class="hidden">
+    <h2>Cadastrar Nova Viagem</h2>
+    <div class="form-group">
+      <label>Tipo de Carga</label>
+      <select id="select-tipo-carga">
+        <option value="CARGAS NORMAIS">CARGAS NORMAIS</option>
+        <option value="CARGAS REFRIGERADAS">CARGAS REFRIGERADAS</option>
+        <option value="CARGAS PERIGOSAS">CARGAS PERIGOSAS</option>
+        <option value="CARGAS PESADAS">CARGAS PESADAS</option>
+        <option value="CARGAS DE AUTO VALOR">CARGAS DE AUTO VALOR</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Escrever/Especificar Detalhes da Carga</label>
+      <input type="text" id="input-detalhe-carga" placeholder="Ex: Bebidas, Grãos, etc.">
+    </div>
+    <div class="form-group">
+      <label>Cidade de Origem</label>
+      <input type="text" id="v-origem">
+    </div>
+    <div class="form-group">
+      <label>Cidade de Destino</label>
+      <input type="text" id="v-destino">
+    </div>
+    <div class="form-group">
+      <label>Distância (KM)</label>
+      <input type="number" id="v-km">
+    </div>
+    <div class="form-group">
+      <label>Peso da Carga (kg/ton)</label>
+      <input type="text" id="v-peso">
+    </div>
+    <div class="form-group">
+      <label>Caminhão Utilizado</label>
+      <select id="v-caminhao">
+        <option value="Próprio">Próprio</option>
+        <option value="Alugado">Alugado</option>
+      </select>
+    </div>
+    <button onclick="startTrip()">Aceitar e Iniciar Viagem</button>
+    <button class="secondary" onclick="navigate('screen-dashboard')">Voltar</button>
+  </div>
+
+  <!-- 3. STATUS DA VIAGEM -->
+  <div id="screen-status" class="hidden">
+    <h2>Status da Viagem Ativa</h2>
+    <div id="active-trip-info" class="card">
+      <p><em>Nenhuma viagem em andamento no momento.</em></p>
+    </div>
+
+    <div id="status-expenses-form" class="hidden">
+      <h3>Lançar Despesas do Percurso</h3>
+      <div class="form-group">
+        <label>Pedágios (R$)</label>
+        <input type="number" id="val-pedagio" value="0">
+      </div>
+      <div class="form-group">
+        <label>Balsas (R$)</label>
+        <input type="number" id="val-balsa" value="0">
+      </div>
+      <div class="form-group">
+        <label>Multas no percurso (R$)</label>
+        <input type="number" id="val-multa" value="0">
+      </div>
+      <div class="form-group">
+        <label>Parada para Descanso / Outros (R$)</label>
+        <input type="number" id="val-descanso" value="0">
+      </div>
+      <button style="background-color: var(--success);" onclick="finishTrip()">Finalizar Viagem</button>
+    </div>
+    <button class="secondary" style="margin-top: 10px;" onclick="navigate('screen-dashboard')">Voltar ao Menu</button>
+  </div>
+
+  <!-- 4. HISTÓRICO -->
+  <div id="screen-historico" class="hidden">
+    <h2>Histórico de Viagens</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Origem/Destino</th>
+          <th>Carga</th>
+          <th>Horas</th>
+        </tr>
+      </thead>
+      <tbody id="tbl-historico">
+        <!-- Linhas inseridas via JS -->
+      </tbody>
+    </table>
+    <button class="secondary" style="margin-top: 15px;" onclick="navigate('screen-dashboard')">Voltar</button>
+  </div>
+
+</div>
+
+<script>
+  let selectedUserType = 'FUNCIONARIO';
+  let currentUser = { name: 'João da Silva', type: 'FUNCIONARIO' };
+  let activeTrip = null;
+  let historyData = [];
+  let totals = { viagens: 0, multas: 0, km: 0, saldoGanhos: 0.00 };
+
+  function selectUserType(type) {
+    selectedUserType = type;
+    document.getElementById('btn-type-func').classList.toggle('active', type === 'FUNCIONARIO');
+    document.getElementById('btn-type-emp').classList.toggle('active', type === 'EMPRESA');
+  }
+
+  function navigate(screenId) {
+    const screens = ['screen-login', 'screen-register', 'screen-dashboard', 'screen-company-dashboard', 'screen-extrato', 'screen-pegar-viagem', 'screen-status', 'screen-historico'];
+    screens.forEach(id => document.getElementById(id).classList.add('hidden'));
+    document.getElementById(screenId).classList.remove('hidden');
+  }
+
+  function login() {
+    const email = document.getElementById('login-email').value;
+    if(email) {
+      currentUser.name = email.split('@')[0];
+    }
+    currentUser.type = selectedUserType;
+
+    if (currentUser.type === 'EMPRESA') {
+      document.getElementById('company-display').innerText = currentUser.name;
+      navigate('screen-company-dashboard');
+    } else {
+      document.getElementById('user-display').innerText = currentUser.name;
+      document.getElementById('ext-nome-funcionario').innerText = currentUser.name;
+      navigate('screen-dashboard');
+    }
+  }
+
+  function registerUser() {
+    const name = document.getElementById('reg-name').value;
+    const type = document.getElementById('reg-type').value;
+
+    if(name) {
+      currentUser.name = name;
+    }
+    currentUser.type = type;
+
+    if (currentUser.type === 'EMPRESA') {
+      document.getElementById('company-display').innerText = currentUser.name;
+      navigate('screen-company-dashboard');
+    } else {
+      document.getElementById('user-display').innerText = currentUser.name;
+      document.getElementById('ext-nome-funcionario').innerText = currentUser.name;
+      navigate('screen-dashboard');
+    }
+  }
+
+  function startTrip() {
+    const tipo = document.getElementById('select-tipo-carga').value;
+    const detalhe = document.getElementById('input-detalhe-carga').value;
+    const origem = document.getElementById('v-origem').value;
+    const destino = document.getElementById('v-destino').value;
+    const km = parseFloat(document.getElementById('v-km').value) || 0;
+
+    if(!origem || !destino) {
+      alert("Por favor, preencha a origem e o destino!");
+      return;
     }
 
-    function atualizarRing(idRing, valorAtual, valorMaximo) {
-      const ring = document.getElementById(idRing);
-      const porcentagem = Math.min(valorAtual / valorMaximo, 1);
-      const offset = CIRCUNFERENCIA - (porcentagem * CIRCUNFERENCIA);
-      ring.style.strokeDashoffset = offset;
-    }
+    activeTrip = {
+      carga: `${tipo} (${detalhe})`,
+      origem,
+      destino,
+      km,
+      startTime: new Date()
+    };
 
-    function atualizarContador() {
-      const agora = new Date();
-      if (agora < dataInicio) return;
+    document.getElementById('active-trip-info').innerHTML = `
+      <p><strong>Carga:</strong> ${activeTrip.carga}</p>
+      <p><strong>Rota:</strong> ${activeTrip.origem} ➔ ${activeTrip.destino}</p>
+      <p><strong>Distância:</strong> ${activeTrip.km} KM</p>
+      <p><strong>Início:</strong> ${activeTrip.startTime.toLocaleTimeString()}</p>
+    `;
+    document.getElementById('status-expenses-form').classList.remove('hidden');
 
-      let anos = agora.getFullYear() - dataInicio.getFullYear();
-      let meses = agora.getMonth() - dataInicio.getMonth();
-      let dias = agora.getDate() - dataInicio.getDate();
-      let horas = agora.getHours() - dataInicio.getHours();
-      let minutos = agora.getMinutes() - dataInicio.getMinutes();
-      let segundos = agora.getSeconds() - dataInicio.getSeconds();
+    navigate('screen-status');
+  }
 
-      if (segundos < 0) { segundos += 60; minutos--; }
-      if (minutos < 0) { minutos += 60; horas--; }
-      if (horas < 0) { horas += 24; dias--; }
-      if (dias < 0) {
-        const ultimoDiaMesAnterior = new Date(agora.getFullYear(), agora.getMonth(), 0).getDate();
-        dias += ultimoDiaMesAnterior;
-        meses--;
-      }
-      if (meses < 0) { meses += 12; anos--; }
+  function finishTrip() {
+    if(!activeTrip) return;
 
-      // Atualiza valores diretamente nos elementos
-      document.getElementById('anos').innerText = anos;
-      document.getElementById('meses').innerText = meses;
-      document.getElementById('dias').innerText = dias;
-      document.getElementById('horas').innerText = padZero(horas);
-      document.getElementById('minutos').innerText = padZero(minutos);
-      document.getElementById('segundos').innerText = padZero(segundos);
+    const endTime = new Date();
+    const durationHours = ((endTime - activeTrip.startTime) / (1000 * 60 * 60)).toFixed(2);
+    const multas = parseFloat(document.getElementById('val-multa').value) || 0;
 
-      // Atualiza o progresso visual dos anéis
-      atualizarRing('ring-anos', anos % 5, 5);
-      atualizarRing('ring-meses', meses, 12);
-      atualizarRing('ring-dias', dias, 31);
-      atualizarRing('ring-horas', horas, 24);
-      atualizarRing('ring-minutos', minutos, 60);
-      atualizarRing('ring-segundos', segundos, 60);
-    }
+    totals.viagens += 1;
+    totals.km += activeTrip.km;
+    totals.multas += multas;
 
-    function vibrarToque() {
-      if ('vibrate' in navigator) {
-        navigator.vibrate(15);
-      }
-    }
+    document.getElementById('ext-viagens').innerText = totals.viagens;
+    document.getElementById('ext-km').innerText = totals.km;
+    document.getElementById('ext-multas').innerText = totals.multas.toFixed(2);
+    document.getElementById('ext-salario').innerText = totals.saldoGanhos.toFixed(2);
 
-    setInterval(atualizarContador, 1000);
-    atualizarContador();
+    historyData.push({
+      data: endTime.toLocaleDateString(),
+      rota: `${activeTrip.origem} / ${activeTrip.destino}`,
+      carga: activeTrip.carga,
+      horas: `${durationHours}h`
+    });
 
-    /* Funções das Telas e Modais */
-    function abrirHistoria() {
-      document.getElementById('telaHistoria').classList.add('ativa');
-    }
+    renderHistory();
 
-    function fecharHistoria() {
-      document.getElementById('telaHistoria').classList.remove('ativa');
-    }
+    activeTrip = null;
+    document.getElementById('active-trip-info').innerHTML = `<p><em>Nenhuma viagem em andamento no momento.</em></p>`;
+    document.getElementById('status-expenses-form').classList.add('hidden');
 
-    function ampliarFoto(src) {
-      document.getElementById('imgZoom').src = src;
-      document.getElementById('modalZoom').classList.add('ativo');
-    }
+    alert("Viagem finalizada com sucesso! Todos os dados foram salvos.");
+    navigate('screen-dashboard');
+  }
 
-    function fecharZoom() {
-      document.getElementById('modalZoom').classList.remove('ativo');
-    }
-
-    function abrirModal(id) {
-      document.getElementById(id).classList.add('ativo');
-    }
-
-    function fecharModal(id) {
-      document.getElementById(id).classList.remove('ativo');
-    }
-  </script>
+  function renderHistory() {
+    const tbody = document.getElementById('tbl-historico');
+    tbody.innerHTML = '';
+    historyData.forEach(item => {
+      tbody.innerHTML += `
+        <tr>
+          <td>${item.data}</td>
+          <td>${item.rota}</td>
+          <td>${item.carga}</td>
+          <td>${item.horas}</td>
+        </tr>
+      `;
+    });
+  }
+</script>
 
 </body>
 </html>
